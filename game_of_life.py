@@ -12,4 +12,14 @@ class GameOfLife:
         self.state = state
 
     def simulate(self):
-        pass
+        for _ in range(self.iterations):
+            self._print_board()
+
+    def _print_board(self):
+        output = ""
+        for h in range(self.height):
+            for w in range(self.width):
+                output += '1 ' if (w, h) in self.state else '0 '
+            output.rstrip()
+            output += '\n'
+        print(output)
