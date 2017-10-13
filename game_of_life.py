@@ -50,8 +50,8 @@ class GameOfLife:
 
     def _print_board(self):
         output = ""
-        for x in range(self._height):
-            for y in range(self._width):
+        for y in range(self._height):
+            for x in range(self._width):
                 output += '1 ' if (x, y) in self._state else '0 '
             output.rstrip()
             output += '\n'
