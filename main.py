@@ -7,8 +7,6 @@ from game_of_life import GameOfLife
 def main(args):
     try:
         stdscr = None
-        color = None
-
         iterations, width, height, state = _read_input()
 
         if args.curses:
@@ -17,8 +15,13 @@ def main(args):
             curses.start_color()
             curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
             color = curses.color_pair(1)
+            symbol = '*'
+            if args.symbol:
+                symbol = args.symbol
+            game = GameOfLife(iterations, width, height, state, stdscr, color, symbol)
+        else:
+            game = GameOfLife(iterations, width, height, state)
 
-        game = GameOfLife(iterations, width, height, state, stdscr, color)
         game.simulate()
         if stdscr:
             curses.endwin()
@@ -49,6 +52,7 @@ def _read_input():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Game of Life implementation')
     parser.add_argument('--pretty', dest='curses', action='store_true')
+    parser.add_argument('-s', '--symbol', help='Symbol do be used for simulation')
     parser.set_defaults(curses=False)
     args = parser.parse_args()
 
