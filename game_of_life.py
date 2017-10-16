@@ -7,13 +7,14 @@ DEAD = 0
 class GameOfLife:
     """An implementation of the popular Game of Life simulation"""
 
-    def __init__(self, iterations, width, height, state, stdscr=None, color=None):
+    def __init__(self, iterations, width, height, state, stdscr=None, color=None, symbol='*'):
         self._iterations = iterations
         self._width = width
         self._height = height
         self._state = state
         self._stdscr = stdscr
         self._color = color
+        self._symbol = symbol
         if self._stdscr:
             self._alive_char = '* '
             self._dead_char = '  '
@@ -77,7 +78,7 @@ class GameOfLife:
         for y in range(self._height):
             output += ' ' * int(math.ceil(scrwidth/2 - self._width))
             for x in range(self._width):
-                output += '* ' if (x, y) in self._state else '  '
+                output += self._symbol + ' ' if (x, y) in self._state else '  '
             output.rstrip()
             output += '\n'
         self._stdscr.clear()
