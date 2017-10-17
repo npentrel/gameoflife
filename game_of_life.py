@@ -49,17 +49,23 @@ class GameOfLife:
         above = y - 1 if y else self._height - 1
         below = y + 1 if y < self._height - 1 else 0
 
-        count = 0
+        living_neighbors = set()
         for cell in [(left, other) for other in [above, y, below]]:
             if cell in self._state:
-                count += 1
+                living_neighbors.add(cell)
         for cell in [(x, other) for other in [above, below]]:
             if cell in self._state:
-                count += 1
+                living_neighbors.add(cell)
         for cell in [(right, other) for other in [above, y, below]]:
             if cell in self._state:
-                count += 1
-        return count
+                living_neighbors.add(cell)
+
+        try:
+            living_neighbors.remove((x,y))
+        except KeyError:
+            pass
+
+        return len(living_neighbors)
 
     def _print_board(self):
         if self._stdscr:
