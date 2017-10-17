@@ -25,7 +25,7 @@ $python3 main.py
 ![](pretty.gif)
 
 ```
-$python3 main.py --pretty
+$python3 main.py --pretty --time 1.0
 20
 15 15
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -50,7 +50,7 @@ $python3 main.py --pretty
 ![](pizza.gif)
 
 ```
-$python3 main.py --pretty --symbol 🍕
+$python3 main.py --pretty --time 1.0 --symbol 🍕
 20
 15 15
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0

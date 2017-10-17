@@ -10,21 +10,19 @@ def main(args):
         iterations, width, height, state = _read_input()
 
         if args.curses:
-            stdscr = curses.initscr()
-            curses.curs_set(0)
-            curses.start_color()
-            curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
-            color = curses.color_pair(1)
             symbol = '*'
             if args.symbol:
                 symbol = args.symbol
-            game = GameOfLife(iterations, width, height, state, stdscr, color, symbol)
+            stdscr, color = _setup_curses()
+            game = GameOfLife(iterations, width, height, state, float(args.sleep), stdscr, color, symbol)
         else:
-            game = GameOfLife(iterations, width, height, state)
+            game = GameOfLife(iterations, width, height, state, float(args.sleep))
 
         game.simulate()
+
         if stdscr:
             curses.endwin()
+
     except KeyboardInterrupt:
         try:
             curses.endwin()
@@ -49,10 +47,19 @@ def _read_input():
     return iterations, width, height, state
 
 
+def _setup_curses():
+    yield curses.initscr()
+    curses.curs_set(0)
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    yield curses.color_pair(1)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Game of Life implementation')
-    parser.add_argument('--pretty', dest='curses', action='store_true')
-    parser.add_argument('-s', '--symbol', help='Symbol do be used for simulation')
+    parser.add_argument('-p', '--pretty', dest='curses', action='store_true', help='use curses library')
+    parser.add_argument('-s', '--symbol', help='use specified symbol for simulation')
+    parser.add_argument('-t', '--time', dest='sleep', help='time in between states in seconds', default=0.0)
     parser.set_defaults(curses=False)
     args = parser.parse_args()
 

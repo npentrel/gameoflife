@@ -7,16 +7,16 @@ DEAD = 0
 class GameOfLife:
     """An implementation of the popular Game of Life simulation"""
 
-    def __init__(self, iterations, width, height, state, stdscr=None, color=None, symbol='*'):
+    def __init__(self, iterations, width, height, state, sleep, stdscr=None, color=None, symbol='*'):
         self._iterations = iterations
         self._width = width
         self._height = height
         self._state = state
+        self._sleep = sleep
         self._stdscr = stdscr
         self._color = color
-        self._symbol = symbol
         if self._stdscr:
-            self._alive_char = '* '
+            self._alive_char = symbol + ' '
             self._dead_char = '  '
         else:
             self._alive_char = '1 '
@@ -25,7 +25,7 @@ class GameOfLife:
     def simulate(self):
         self._print_board()
         for _ in range(self._iterations):
-            time.sleep(1)
+            time.sleep(self._sleep)
             self._apply_rules()
             self._print_board()
 
@@ -84,7 +84,7 @@ class GameOfLife:
         for y in range(self._height):
             output += ' ' * int(math.ceil(scrwidth/2 - self._width))
             for x in range(self._width):
-                output += self._symbol + ' ' if (x, y) in self._state else '  '
+                output += self._alive_char if (x, y) in self._state else self._dead_char
             output.rstrip()
             output += '\n'
         self._stdscr.clear()
