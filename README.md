@@ -1,3 +1,5 @@
+![](pumpkins.gif)
+
 # Game of Life
 
 ## How to run this project:
