@@ -29,41 +29,50 @@ class GameOfLife:
             self._apply_rules()
             self._print_board()
 
-    def _is_alive(self, x, y):
-        neighbor_count = self._get_neighbor_count(x, y)
-        if neighbor_count == 3:
+    def _is_alive(self, x, y, neighbor_counts):
+        neighbor_count = self._get_neighbor_count(x, y, neighbor_counts)
+        if neighbor_count == 3 or neighbor_count == 2:
             return ALIVE
-
-        if (x, y) in self._state:
-            if neighbor_count == 2:
-                return ALIVE
 
         return DEAD
 
     def _apply_rules(self):
-        self._state = {(x, y) for y in range(self._height) for x in range(self._width) if self._is_alive(x,y)}
+        new_state = set()
+        neighbor_counts = {}
+        for x, y in self._state:
+            if self._is_alive(x, y, neighbor_counts):
+                new_state.add((x, y))
 
-    def _get_neighbor_count(self, x, y):
+        living_neighbors = {cell for cell in neighbor_counts if neighbor_counts[cell] == 3}
+        self._state = new_state.union(living_neighbors)
+
+    def _get_neighbor_count(self, x, y, neighbor_counts):
         left = x - 1 if x else self._width - 1
         right = x + 1 if x < self._width - 1 else 0
         above = y - 1 if y else self._height - 1
         below = y + 1 if y < self._height - 1 else 0
 
-        living_neighbors = set()
+        neighbors = set()
+
         for cell in [(left, other) for other in [above, y, below]]:
-            if cell in self._state:
-                living_neighbors.add(cell)
+            neighbors.add(cell)
         for cell in [(x, other) for other in [above, below]]:
-            if cell in self._state:
-                living_neighbors.add(cell)
+            neighbors.add(cell)
         for cell in [(right, other) for other in [above, y, below]]:
-            if cell in self._state:
-                living_neighbors.add(cell)
+            neighbors.add(cell)
 
         try:
-            living_neighbors.remove((x,y))
+            neighbors.remove((x, y))
         except KeyError:
             pass
+
+        living_neighbors = set()
+
+        for neighbor in neighbors:
+            if neighbor in self._state:
+                living_neighbors.add(neighbor)
+            else:
+                neighbor_counts[neighbor] = neighbor_counts.get(neighbor, 0) + 1
 
         return len(living_neighbors)
 
